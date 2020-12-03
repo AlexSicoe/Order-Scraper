@@ -1,16 +1,19 @@
 // const Product = require('./Product')
 
 /** @typedef {import('./Product')} Product  */
-/** @typedef {import('./BillingInfo')} BillingInfo */
+/** @typedef {import('./Delivery')} Delivery */
+/** @typedef {import('./Billing')} Billing */
 
 class Order {
   /**
    * @param  {Array<Product>} products
-   * @param  {BillingInfo} info
+   * @param  {Delivery} delivery
+   * @param  {Billing} billing
    */
-  constructor(products, info) {
+  constructor(products, delivery, billing) {
     this.products = products
-    this.info = info
+    this.delivery = delivery
+    this.billing = billing
   }
 }
 
