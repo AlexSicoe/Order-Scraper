@@ -20,10 +20,14 @@ class OrderListPage {
   scrapeMaxPage() {
     const { document } = this.dom.window
     const elements = document.querySelectorAll('td.text_normal_b > div > a')
-
-    //td.text_normal_b > div > a
+    const pageNumbers = []
+    for (const e of elements) {
+      const pageNum = e.textContent
+      pageNumbers.push(pageNum)
+    }
+    console.log(pageNumbers)
     //Get all
-    //if (array.length) get max of array - 1
+    //if (array.length) get max of array
     //else return 0
   }
 }

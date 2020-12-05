@@ -15,22 +15,21 @@ class OrderPage {
 
   _scrapeProducts() {
     const { document } = this.dom.window
-    const list = document.querySelectorAll('tr:nth-child(2) > td > table > tbody > tr > td[height="20"]')
+    const list = document.querySelectorAll(
+      'tr:nth-child(2) > td > table > tbody > tr > td[height="20"]'
+    )
 
     /** @type {Array<Product>} */
     const products = []
 
-
     for (let child of list) {
       const tr = child.parentElement
-      
+
       const nume = tr.querySelector('a').textContent
       const codFurnizorElem = tr.querySelector('p')
       const codFurnizor = codFurnizorElem ? codFurnizorElem.textContent : ''
       const cantitate = tr.querySelector('input[name*="cantitate"]').value
       const pret = tr.querySelector('input[name*="pretproduse"]').value
-
-   
 
       const product = new Product(nume, codFurnizor, cantitate, pret)
       products.push(product)
@@ -54,7 +53,7 @@ class OrderPage {
       scraper.getValueById('livrare_adresa_ap'),
       scraper.getValueById('livrare_cod_postal'),
       scraper.getValueById('livrare_localitate'),
-      scraper.getValueByName('judet'),
+      scraper.getValueByName('judet')
     )
 
     return new Delivery(tipLivrare, pretLivrare, adresa)
@@ -72,7 +71,7 @@ class OrderPage {
       scraper.getValueById('adresa_ap'),
       scraper.getValueById('cod_postal'),
       scraper.getValueById('localitate'),
-      scraper.getValueByName('judet', 1),
+      scraper.getValueByName('judet', 1)
     )
 
     return new Billing(
@@ -81,15 +80,17 @@ class OrderPage {
       scraper.getValueById('prenume'),
       scraper.getValueById('telefon'),
       scraper.getValueById('email'),
-      adresa,
+      adresa
     )
   }
 
-  scrapeOrder() {
+  scrapeOrder(id) {
+    if (!id) throw Error('id not specified')
+
     const products = this._scrapeProducts()
     const delivery = this._scrapeDelivery()
     const billing = this._scrapeBilling()
-    return new Order(products, delivery, billing)
+    return new Order(id, products, delivery, billing)
   }
 }
 

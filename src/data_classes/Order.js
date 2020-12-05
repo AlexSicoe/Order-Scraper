@@ -6,11 +6,13 @@
 
 class Order {
   /**
+   * @param  {number|string} id
    * @param  {Array<Product>} products
    * @param  {Delivery} delivery
    * @param  {Billing} billing
    */
-  constructor(products, delivery, billing) {
+  constructor(id, products, delivery, billing) {
+    this.id = id
     this.products = products
     this.delivery = delivery
     this.billing = billing

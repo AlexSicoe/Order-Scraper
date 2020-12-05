@@ -2,7 +2,9 @@ const fs = require('fs')
 const OrderPage = require('./pages/OrderPage')
 const OrderListPage = require('./pages/OrderListPage')
 const OrderService = require('./services/OrderService')
-
+const InvoiceGenerator = require('./generators/InvoiceGenerator')
+const OrderType = require('./data_classes/OrderType')
+/** @typedef {import('./data_classes/OrderType')} OrderType */
 const service = new OrderService()
 
 async function getOrderById(id) {
@@ -10,8 +12,9 @@ async function getOrderById(id) {
   const orderHtml = await service.getOrderHtml(id)
   // const orderHtml = fs.readFileSync('./output/OrderPage.html', 'utf-8')
   const orderPage = new OrderPage(orderHtml)
-  const order = orderPage.scrapeOrder()
+  const order = orderPage.scrapeOrder(id)
 
+  console.log(`Comanda #${order.id}`)
   console.table(order.products)
   console.log(order.delivery)
   console.log(order.billing)
@@ -19,8 +22,18 @@ async function getOrderById(id) {
   return order
 }
 
-async function exec() {
-  const orderListHtml = await service.getOrderListHtml()
+async function collectById(id) {
+  const order = await getOrderById(id)
+  const invoiceGenerator = new InvoiceGenerator()
+  invoiceGenerator.generate(order)
+}
+
+/**
+ * @param  {OrderType} orderType
+ * @param  {number|string} pageNum
+ */
+async function collectByPageNumber(pageNum) {
+  const orderListHtml = await service.getOrderListHtml(pageNum)
   const orderListPage = new OrderListPage(orderListHtml)
 
   const ids = orderListPage.scrapeOrderIds()
@@ -28,8 +41,10 @@ async function exec() {
 
   for (const id of ids) {
     const order = await getOrderById(id)
+    const invoiceGenerator = new InvoiceGenerator()
+    invoiceGenerator.generate(order)
   }
 }
 
-exec()
-// getOrderById(5303)
+collectByPageNumber(1)
+// collectById(5303)
