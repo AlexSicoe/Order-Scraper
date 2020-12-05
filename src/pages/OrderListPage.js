@@ -1,5 +1,6 @@
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
+const Parser = require('../util/Parser')
 
 class OrderListPage {
   constructor(html) {
@@ -17,18 +18,15 @@ class OrderListPage {
     return ids
   }
 
-  scrapeMaxPage() {
+  scrapeLastPageNumber() {
     const { document } = this.dom.window
     const elements = document.querySelectorAll('td.text_normal_b > div > a')
     const pageNumbers = []
     for (const e of elements) {
-      const pageNum = e.textContent
+      const pageNum = Parser.parseInt(e.textContent)
       pageNumbers.push(pageNum)
     }
-    console.log(pageNumbers)
-    //Get all
-    //if (array.length) get max of array
-    //else return 0
+    return pageNumbers.length ? pageNumbers[pageNumbers.length - 1] : 1
   }
 }
 module.exports = OrderListPage
