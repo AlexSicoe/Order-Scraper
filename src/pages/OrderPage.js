@@ -7,9 +7,6 @@ const Billing = require('../data_classes/Billing')
 const Delivery = require('../data_classes/Delivery')
 const Scraper = require('../util/Scraper')
 
-const TABLE_SELECTOR =
-  'body > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td > table > tbody'
-
 class OrderPage {
   constructor(html) {
     this.dom = new JSDOM(html)
@@ -18,19 +15,22 @@ class OrderPage {
 
   _scrapeProducts() {
     const { document } = this.dom.window
-    const table = document.querySelector(TABLE_SELECTOR)
-    const list = table.querySelectorAll('tr > td[height="20"]')
+    const list = document.querySelectorAll('tr:nth-child(2) > td > table > tbody > tr > td[height="20"]')
 
     /** @type {Array<Product>} */
     const products = []
 
+
     for (let child of list) {
       const tr = child.parentElement
-
+      
       const nume = tr.querySelector('a').textContent
-      const codFurnizor = tr.querySelector('p').textContent
+      const codFurnizorElem = tr.querySelector('p')
+      const codFurnizor = codFurnizorElem ? codFurnizorElem.textContent : ''
       const cantitate = tr.querySelector('input[name*="cantitate"]').value
       const pret = tr.querySelector('input[name*="pretproduse"]').value
+
+   
 
       const product = new Product(nume, codFurnizor, cantitate, pret)
       products.push(product)
@@ -85,7 +85,7 @@ class OrderPage {
     )
   }
 
-  scrape() {
+  scrapeOrder() {
     const products = this._scrapeProducts()
     const delivery = this._scrapeDelivery()
     const billing = this._scrapeBilling()

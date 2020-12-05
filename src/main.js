@@ -1,18 +1,35 @@
 const fs = require('fs')
 const OrderPage = require('./pages/OrderPage')
+const OrderListPage = require('./pages/OrderListPage')
 const OrderService = require('./services/OrderService')
 
-// let htmlOrder = fs.readFileSync('./input/Comanda 2.html', 'utf8')
-// let orderPage = new OrderPage(htmlOrder)
-// const order = orderPage.scrape()
+const service = new OrderService()
 
-// console.table(order.products)
-// console.log(order.delivery)
-// console.log(order.billing)
+async function getOrderById(id) {
+  if (!id) throw Error(`id doesn't exist`)
+  const orderHtml = await service.getOrderHtml(id)
+  // const orderHtml = fs.readFileSync('./output/OrderPage.html', 'utf-8')
+  const orderPage = new OrderPage(orderHtml)
+  const order = orderPage.scrapeOrder()
+
+  console.table(order.products)
+  console.log(order.delivery)
+  console.log(order.billing)
+
+  return order
+}
 
 async function exec() {
-  const service = new OrderService()
-  const orderListPage = await service.getOrderListPage()
+  const orderListHtml = await service.getOrderListHtml()
+  const orderListPage = new OrderListPage(orderListHtml)
+
+  const ids = orderListPage.scrapeOrderIds()
+  console.log(ids)
+
+  for (const id of ids) {
+    const order = await getOrderById(id)
+  }
 }
 
 exec()
+// getOrderById(5303)

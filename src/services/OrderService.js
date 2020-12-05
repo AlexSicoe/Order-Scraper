@@ -8,8 +8,12 @@ class OrderService {
     //
   }
 
-  async getOrderListPage(orderType = 'comanda_neconfirmata', pageNum = 0) {
-    const res = await axios.get(API + '/panou_de_control.php', {
+  async getOrderListHtml(
+    orderType = 'comanda_neconfirmata',
+    pageNum = 0,
+    handleError = () => {}
+  ) {
+    const res = await axios.get(API + 'panou_de_control.php', {
       params: {
         pg: 'procesare_comenzi/comenzi.php',
         comtip: orderType,
@@ -19,12 +23,12 @@ class OrderService {
         Cookie
       }
     })
-    //TODO handle error
+    await handleError(res)
     fs.writeFileSync('./output/OrderListPage.html', res.data)
     return res.data
   }
 
-  async getOrderPage(id) {
+  async getOrderHtml(id, handleError = () => {}) {
     if (!id) throw Error(`id doesn't exist`)
     const res = await axios.get(API + 'panou_de_control.php', {
       params: {
@@ -35,7 +39,7 @@ class OrderService {
         Cookie
       }
     })
-    //TODO handle error
+    await handleError(res)
     fs.writeFileSync('./output/OrderPage.html', res.data)
     return res.data
   }
