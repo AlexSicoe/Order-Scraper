@@ -21,6 +21,21 @@ class Address {
     this.localitate = localitate
     this.judet = judet
   }
+
+  toString() {
+    const {
+      strada,
+      nr,
+      bloc,
+      scara,
+      etaj,
+      ap,
+      codPostal,
+      localitate,
+      judet
+    } = this
+    return `Strada: ${strada} ${nr}, bloc: ${bloc}, scara: ${scara}, etaj: ${etaj}, ap: ${ap}, codPostal: ${codPostal}, localitate: ${localitate}, judet: ${judet}`
+  }
 }
 
 module.exports = Address

@@ -1,7 +1,7 @@
 const OrderPage = require('./pages/OrderPage')
 const OrderListPage = require('./pages/OrderListPage')
 const OrderService = require('./services/OrderService')
-const InvoiceGenerator = require('./generators/InvoiceGenerator')
+const ExcelGenerator = require('./generators/ExcelGenerator')
 const OrderType = require('./data_classes/OrderType')
 /** @typedef {import('./data_classes/OrderType')} OrderType */
 const service = new OrderService()
@@ -12,18 +12,18 @@ async function getOrderById(id) {
   const orderPage = new OrderPage(orderHtml)
   const order = orderPage.scrapeOrder(id)
 
-  console.log(`Comanda #${order.id}`)
-  console.table(order.products)
-  console.log(order.delivery)
-  console.log(order.billing)
+  // console.log(`Comanda #${order.id}`)
+  // console.table(order.products)
+  // console.log(order.delivery)
+  // console.log(order.billing)
 
   return order
 }
 
 async function collectById(id) {
   const order = await getOrderById(id)
-  const invoiceGenerator = new InvoiceGenerator()
-  invoiceGenerator.generate(order)
+  const excelGenerator = new ExcelGenerator(order)
+  excelGenerator.generate()
 }
 
 /**
@@ -39,10 +39,10 @@ async function collectByPageNumber(pageNum) {
 
   for (const id of ids) {
     const order = await getOrderById(id)
-    const invoiceGenerator = new InvoiceGenerator()
-    invoiceGenerator.generate(order)
+    const excelGenerator = new ExcelGenerator(order)
+    excelGenerator.generate()
   }
 }
 
-collectByPageNumber(1)
-// collectById(5303)
+// collectByPageNumber(1)
+collectById(5298)
