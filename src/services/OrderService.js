@@ -1,14 +1,18 @@
 require('dotenv').config()
-const { API, Cookie } = process.env
+const { API, PHPSESSID } = process.env
 const fs = require('fs')
 const axios = require('axios').default
 const OrderType = require('../data_classes/OrderType')
 
 /** @typedef {import('../data_classes/OrderType')} OrderType */
+/** @typedef {import('../services/AuthService')} AuthService */
 
 class OrderService {
-  constructor() {
-    //
+  /**
+   * @param  {AuthService} authService
+   */
+  constructor(authService) {
+    this.authService = authService
   }
 
   /**
@@ -23,7 +27,7 @@ class OrderService {
         pageNum_comenzi: --pageNum
       },
       headers: {
-        Cookie
+        Cookie: `PHPSESSID=${PHPSESSID}`
       }
     })
     fs.writeFileSync('./output/OrderListPage.html', res.data)
@@ -31,6 +35,7 @@ class OrderService {
   }
 
   async getOrderHtml(id) {
+    // console.log(this.authService.phpsessid)
     if (!id) throw Error(`id doesn't exist`)
     const res = await axios.get(API + 'panou_de_control.php', {
       params: {
@@ -38,7 +43,7 @@ class OrderService {
         idc: id
       },
       headers: {
-        Cookie
+        Cookie: `PHPSESSID=${PHPSESSID}`
       }
     })
     fs.writeFileSync('./output/OrderPage.html', res.data)

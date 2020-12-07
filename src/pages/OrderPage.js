@@ -1,11 +1,11 @@
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
+const Scraper = require('../util/Scraper')
 const Product = require('../data_classes/Product')
 const Order = require('../data_classes/Order')
 const Address = require('../data_classes/Address')
 const Billing = require('../data_classes/Billing')
 const Delivery = require('../data_classes/Delivery')
-const Scraper = require('../util/Scraper')
 
 class OrderPage {
   constructor(html) {

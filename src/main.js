@@ -1,14 +1,27 @@
 const OrderPage = require('./pages/OrderPage')
 const OrderListPage = require('./pages/OrderListPage')
+const AuthPage = require('./pages/AuthPage')
 const OrderService = require('./services/OrderService')
+const AuthService = require('./services/AuthService')
 const ExcelGenerator = require('./generators/ExcelGenerator')
 const OrderType = require('./data_classes/OrderType')
 /** @typedef {import('./data_classes/OrderType')} OrderType */
-const service = new OrderService()
+
+const authService = new AuthService()
+const orderService = new OrderService(authService)
 
 async function getOrderById(id) {
   if (!id) throw Error(`id doesn't exist`)
-  const orderHtml = await service.getOrderHtml(id)
+
+  const orderHtml = await orderService.getOrderHtml(id)
+  const authPage = new AuthPage(orderHtml)
+
+  if (authPage.shouldAuthenticate()) {
+    throw Error('Not Authenticated')
+    // authPage.authenticate()
+    //get order again
+  }
+
   const orderPage = new OrderPage(orderHtml)
   const order = orderPage.scrapeOrder(id)
 
@@ -31,8 +44,13 @@ async function collectById(id) {
  * @param  {number|string} pageNum
  */
 async function collectByPageNumber(pageNum) {
-  const orderListHtml = await service.getOrderListHtml(pageNum)
+  const orderListHtml = await orderService.getOrderListHtml(pageNum)
+  const authPage = new AuthPage(orderListHtml)
   const orderListPage = new OrderListPage(orderListHtml)
+
+  if (authPage.shouldAuthenticate()) {
+    throw Error('Not Authenticated')
+  }
 
   const ids = orderListPage.scrapeOrderIds()
   console.log(ids)
@@ -44,5 +62,12 @@ async function collectByPageNumber(pageNum) {
   }
 }
 
-// collectByPageNumber(1)
-collectById(5298)
+async function main() {
+  await authService.authenticate()
+  // console.log(authService.phpsessid)
+  // await authService.getControlPanel()
+  // await collectByPageNumber(1)
+  await collectById(5298)
+}
+
+main()
