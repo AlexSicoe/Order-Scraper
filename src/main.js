@@ -64,7 +64,8 @@ async function collectByPageNumber(pageNum) {
 }
 
 async function main() {
-  fsExtra.emptyDirSync('./output/excel/')
+  fsExtra.rmdirSync('./output/excel/', { recursive: true })
+  fsExtra.mkdirSync('./output/excel/')
 
   await authService.authenticate()
   // console.log(authService.phpsessid)
