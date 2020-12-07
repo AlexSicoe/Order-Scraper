@@ -1,3 +1,4 @@
+const fsExtra = require('fs-extra')
 const OrderPage = require('./pages/OrderPage')
 const OrderListPage = require('./pages/OrderListPage')
 const AuthPage = require('./pages/AuthPage')
@@ -63,6 +64,8 @@ async function collectByPageNumber(pageNum) {
 }
 
 async function main() {
+  fsExtra.emptyDirSync('./output/excel/')
+
   await authService.authenticate()
   // console.log(authService.phpsessid)
   // await authService.getControlPanel()
