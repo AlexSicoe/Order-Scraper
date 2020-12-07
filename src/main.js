@@ -1,4 +1,4 @@
-const fsExtra = require('fs-extra')
+const fs = require('fs')
 const OrderPage = require('./pages/OrderPage')
 const OrderListPage = require('./pages/OrderListPage')
 const AuthPage = require('./pages/AuthPage')
@@ -64,8 +64,8 @@ async function collectByPageNumber(pageNum) {
 }
 
 async function main() {
-  fsExtra.rmdirSync('./output/excel/', { recursive: true })
-  fsExtra.mkdirSync('./output/excel/')
+  fs.rmdirSync('./output/excel/', { recursive: true })
+  fs.mkdirSync('./output/excel/')
 
   await authService.authenticate()
   // console.log(authService.phpsessid)
