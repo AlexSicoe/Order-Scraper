@@ -1,4 +1,5 @@
 const fs = require('fs')
+const prompts = require('prompts')
 const OrderPage = require('./pages/OrderPage')
 const OrderListPage = require('./pages/OrderListPage')
 const AuthPage = require('./pages/AuthPage')
@@ -6,22 +7,26 @@ const OrderService = require('./services/OrderService')
 const AuthService = require('./services/AuthService')
 const ExcelGenerator = require('./generators/ExcelGenerator')
 const OrderType = require('./data_classes/OrderType')
+
 /** @typedef {import('./data_classes/OrderType')} OrderType */
 
 const authService = new AuthService()
 const orderService = new OrderService(authService)
 
-async function getOrderById(id) {
-  if (!id) throw Error(`id doesn't exist`)
-
-  const orderHtml = await orderService.getOrderHtml(id)
-  const authPage = new AuthPage(orderHtml)
-
+async function checkAuthentication(html) {
+  const authPage = new AuthPage(html)
   if (authPage.shouldAuthenticate()) {
     throw Error('Not Authenticated')
     // authPage.authenticate()
     //get order again
   }
+}
+
+async function getOrderById(id) {
+  if (!id) throw Error(`id doesn't exist`)
+
+  const orderHtml = await orderService.getOrderHtml(id)
+  await checkAuthentication(orderHtml)
 
   const orderPage = new OrderPage(orderHtml)
   const order = orderPage.scrapeOrder(id)
@@ -44,15 +49,11 @@ async function collectById(id) {
  * @param  {OrderType} orderType
  * @param  {number|string} pageNum
  */
-async function collectByPageNumber(pageNum) {
-  const orderListHtml = await orderService.getOrderListHtml(pageNum)
-  const authPage = new AuthPage(orderListHtml)
+async function collectByPageNumber(pageNum, orderType) {
+  const orderListHtml = await orderService.getOrderListHtml(pageNum, orderType)
+  await checkAuthentication(orderListHtml)
+
   const orderListPage = new OrderListPage(orderListHtml)
-
-  if (authPage.shouldAuthenticate()) {
-    throw Error('Not Authenticated')
-  }
-
   const ids = orderListPage.scrapeOrderIds()
   console.log(ids)
 
@@ -61,6 +62,15 @@ async function collectByPageNumber(pageNum) {
     const excelGenerator = new ExcelGenerator(order)
     excelGenerator.generate()
   }
+}
+
+async function collectLastPageNumber(orderType) {
+  const orderListHtml = await orderService.getOrderListHtml(1, orderType)
+  await checkAuthentication(orderListHtml)
+
+  const orderListPage = new OrderListPage(orderListHtml)
+  const ids = orderListPage.scrapeLastPageNumber()
+  console.log(ids)
 }
 
 async function main() {
