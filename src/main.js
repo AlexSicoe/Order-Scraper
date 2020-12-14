@@ -66,7 +66,7 @@ async function collectByPageNumber(pageNum, orderType) {
     const excelGenerator = new ExcelGenerator(order)
     excelGenerator.generate()
   }
-  console.log('Collected')
+  console.log('Done')
 }
 
 async function findLastPageNumber(orderType) {
@@ -90,6 +90,7 @@ async function main() {
   // await collectByPageNumber(1)
   // await collectById(5393)
 }
+main()
 
 async function promptMainMenu() {
   const ProgramType = Object.freeze({
@@ -154,4 +155,3 @@ async function promptByPageNum() {
   await collectByPageNumber(answer.pageNum)
 }
 
-main()
