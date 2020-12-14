@@ -11,7 +11,7 @@ class ExcelGenerator {
     this.order = order
   }
 
-  async generate() {
+  generate() {
     // const cell = XLSX.utils.decode_cell('A1')
 
     let { order } = this
@@ -43,7 +43,7 @@ class ExcelGenerator {
 
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, sheet.ws, 'Sheet1')
-    await XLSX.writeFile(wb, './output/excel/' + filename)
+    XLSX.writeFile(wb, './output/excel/' + filename)
   }
 
   static appendColumn() {}
