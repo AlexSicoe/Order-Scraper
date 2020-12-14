@@ -5,15 +5,17 @@ class ExcelWorksheetHelper {
    * @param  {XLSX.WorkSheet} ws
    */
   constructor(ws) {
-    this.ws = ws
+    this.ws = ws ? ws : XLSX.utils.json_to_sheet([])
   }
 
-  append(data = [], opts = { origin: -1 }) {
-    XLSX.utils.sheet_add_json(this.ws, data, opts)
+  append(data = [], opts = {}) {
+    const DEFAULT_OPTS = { origin: -1 }
+    XLSX.utils.sheet_add_json(this.ws, data, { ...DEFAULT_OPTS, ...opts })
   }
 
-  appendArray2D(data = [], opts = { origin: -1 }) {
-    XLSX.utils.sheet_add_aoa(this.ws, data, opts)
+  appendArray2D(data = [], opts = {}) {
+    const DEFAULT_OPTS = { origin: -1 }
+    XLSX.utils.sheet_add_aoa(this.ws, data, { ...DEFAULT_OPTS, ...opts })
   }
 }
 

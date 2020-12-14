@@ -16,8 +16,8 @@ class ExcelGenerator {
 
     let { order } = this
     const filename = `Comanda ${order.id}.xlsx`
-    const ws = XLSX.utils.json_to_sheet([{ 'Comanda nr': order.id }])
-    const wsHelper = new ExcelWorksheetHelper(ws)
+    const wsHelper = new ExcelWorksheetHelper()
+    wsHelper.append([{ 'Comanda nr': order.id }], { origin: 0 })
     wsHelper.append()
     wsHelper.append(order.products)
     wsHelper.append()
@@ -42,7 +42,7 @@ class ExcelGenerator {
     // console.log(ws['!ref']) //get used range
 
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+    XLSX.utils.book_append_sheet(wb, wsHelper.ws, 'Sheet1')
     await XLSX.writeFile(wb, './output/excel/' + filename)
   }
 
