@@ -71,7 +71,7 @@ async function main() {
   // console.log(authService.phpsessid)
   // await authService.getControlPanel()
   // await collectByPageNumber(1)
-  await collectById(5298)
+  await collectById(5393)
 }
 
 main()
