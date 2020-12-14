@@ -16,20 +16,20 @@ class ExcelGenerator {
 
     let { order } = this
     const filename = `Comanda ${order.id}.xlsx`
-    const wsHelper = new ExcelWorksheetHelper()
-    wsHelper.append([{ 'Comanda nr': order.id }], { origin: 0 })
-    wsHelper.append()
-    wsHelper.append(order.products)
-    wsHelper.append()
-    wsHelper.append([
+    const sheet = new ExcelWorksheetHelper()
+    sheet.append([{ 'Comanda nr': order.id }], { origin: 0 })
+    sheet.append()
+    sheet.append(order.products)
+    sheet.append()
+    sheet.append([
       {
         'Tip Livrare': order.delivery.tipLivrare,
         'Preț Livrare': order.delivery.pretLivrare,
         'Adresa Facturare': order.billing.adresa.toString()
       }
     ])
-    wsHelper.append()
-    wsHelper.append([
+    sheet.append()
+    sheet.append([
       {
         Apelativ: order.billing.apelativ,
         Nume: order.billing.nume,
@@ -39,10 +39,10 @@ class ExcelGenerator {
       }
     ])
 
-    // console.log(ws['!ref']) //get used range
+    // console.log(sheet.ws['!ref']) //get used range
 
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, wsHelper.ws, 'Sheet1')
+    XLSX.utils.book_append_sheet(wb, sheet.ws, 'Sheet1')
     await XLSX.writeFile(wb, './output/excel/' + filename)
   }
 
