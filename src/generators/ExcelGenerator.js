@@ -17,19 +17,19 @@ class ExcelGenerator {
     let { order } = this
     const filename = `Comanda ${order.id}.xlsx`
     const sheet = new ExcelWorksheetHelper()
-    sheet.append([{ 'Comanda nr': order.id }], { origin: 0 })
-    sheet.append()
-    sheet.append(order.products)
-    sheet.append()
-    sheet.append([
+    sheet.add([{ 'Comanda nr': order.id }])
+    sheet.add()
+    sheet.add(order.products)
+    sheet.add()
+    sheet.add([
       {
         'Tip Livrare': order.delivery.tipLivrare,
         'Preț Livrare': order.delivery.pretLivrare,
         'Adresa Facturare': order.billing.adresa.toString()
       }
     ])
-    sheet.append()
-    sheet.append([
+    sheet.add()
+    sheet.add([
       {
         Apelativ: order.billing.apelativ,
         Nume: order.billing.nume,
