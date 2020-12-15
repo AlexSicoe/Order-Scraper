@@ -37,7 +37,9 @@ class Address {
       judet
     } = this
 
-    const sb = new AddressStringBuilder(`strada: ${strada} ${nr}`)
+    const sb = new AddressStringBuilder()
+    sb.append('strada', strada)
+    sb.append('nr', nr)
     sb.append('bloc', bloc)
     sb.append('scara', scara)
     sb.append('etaj', etaj)
@@ -54,7 +56,10 @@ class AddressStringBuilder {
    * @param  {String} initStr
    */
   constructor(initStr) {
-    this.arr = [initStr]
+    this.arr = []
+    if (initStr) {
+      this.arr.push(initStr)
+    }
   }
 
   append(dataName, data) {
