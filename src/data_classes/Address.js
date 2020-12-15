@@ -1,3 +1,5 @@
+const { default: AuthService } = require('../services/AuthService')
+
 class Address {
   /**
    * @param  {String} strada
@@ -34,7 +36,35 @@ class Address {
       localitate,
       judet
     } = this
-    return `Strada: ${strada} ${nr}, bloc: ${bloc}, scara: ${scara}, etaj: ${etaj}, ap: ${ap}, codPostal: ${codPostal}, localitate: ${localitate}, judet: ${judet}`
+
+    const sb = new AddressStringBuilder(`strada: ${strada} ${nr}`)
+    sb.append('bloc', bloc)
+    sb.append('scara', scara)
+    sb.append('etaj', etaj)
+    sb.append('ap', ap)
+    sb.append('cod postal', codPostal)
+    sb.append('localitate', localitate)
+    sb.append('judet', judet)
+    return sb.build()
+  }
+}
+
+class AddressStringBuilder {
+  /**
+   * @param  {String} initStr
+   */
+  constructor(initStr) {
+    this.arr = [initStr]
+  }
+
+  append(dataName, data) {
+    if (data) {
+      this.arr.push(`${dataName}: ${data}`)
+    }
+  }
+
+  build() {
+    return this.arr.join(', ')
   }
 }
 
