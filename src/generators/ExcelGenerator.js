@@ -1,4 +1,5 @@
 const XLSX = require('xlsx')
+const FirmBilling = require('../data_classes/FirmBilling')
 const ExcelWorksheetHelper = require('./ExcelWorksheetHelper')
 
 /** @typedef {import('../data_classes/Order')} Order */
@@ -38,6 +39,19 @@ class ExcelGenerator {
         Email: order.billing.email
       }
     ])
+
+    if (order.billing instanceof FirmBilling) {
+      sheet.add()
+      sheet.add([
+        {
+          Firma: order.billing.firma,
+          'Cod Fiscal': order.billing.codFiscal,
+          RC: order.billing.rc,
+          Banca: order.billing.banca,
+          'Cont Bancar': order.billing.contBancar
+        }
+      ])
+    }
 
     // console.log(sheet.ws['!ref']) //get used range
 

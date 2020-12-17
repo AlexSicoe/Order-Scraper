@@ -5,6 +5,7 @@ const Product = require('../data_classes/Product')
 const Order = require('../data_classes/Order')
 const Address = require('../data_classes/Address')
 const Billing = require('../data_classes/Billing')
+const FirmBilling = require('../data_classes/FirmBilling')
 const Delivery = require('../data_classes/Delivery')
 
 class OrderPage {
@@ -74,14 +75,32 @@ class OrderPage {
       scraper.getValueByName('judet', 1)
     )
 
-    return new Billing(
-      scraper.getValueById('apelativ'),
-      scraper.getValueById('nume'),
-      scraper.getValueById('prenume'),
-      scraper.getValueById('telefon'),
-      scraper.getValueById('email'),
-      adresa
-    )
+    //if you find these, its a firm
+    const firma = scraper.mightGetValueById('firma')
+    if (firma) {
+      return new FirmBilling(
+        firma,
+        scraper.mightGetValueById('cod_fiscal'),
+        scraper.mightGetValueById('registrul_comertului'),
+        scraper.mightGetValueById('banca'),
+        scraper.mightGetValueById('cont_banca'),
+        scraper.getValueById('apelativ'),
+        scraper.getValueById('nume'),
+        scraper.getValueById('prenume'),
+        scraper.getValueById('telefon'),
+        scraper.getValueById('email'),
+        adresa
+      )
+    } else {
+      return new Billing(
+        scraper.getValueById('apelativ'),
+        scraper.getValueById('nume'),
+        scraper.getValueById('prenume'),
+        scraper.getValueById('telefon'),
+        scraper.getValueById('email'),
+        adresa
+      )
+    }
   }
 
   scrapeOrder(id) {

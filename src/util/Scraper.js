@@ -14,6 +14,11 @@ class Scraper {
     return elem.value
   }
 
+  mightGetValueById(id) {
+    const elem = this.dom.window.document.getElementById(id)
+    return elem ? elem.value : undefined
+  }
+
   getValueByName(name, index = 0) {
     const elems = this.dom.window.document.getElementsByName(name)
     const elem = elems[index]
