@@ -51,6 +51,8 @@ class Address {
   }
 }
 
+module.exports = Address
+
 class AddressStringBuilder {
   /**
    * @param  {String} initStr
@@ -72,5 +74,3 @@ class AddressStringBuilder {
     return this.arr.join(', ')
   }
 }
-
-module.exports = Address
